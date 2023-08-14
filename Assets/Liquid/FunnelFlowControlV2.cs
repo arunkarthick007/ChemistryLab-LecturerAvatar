@@ -514,7 +514,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
 
             if (num_pressure_releases > 0 && pressure_trapped)
             {
-                //hissing_audio.Play();
+                hissing_audio.Play();
 
                 // Set pressure releases down by 1
                 num_pressure_releases--;
