@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+ 
 
 public class VersionManager : MonoBehaviour
 {
@@ -12,12 +13,7 @@ public class VersionManager : MonoBehaviour
     public GameObject welcome_object;
     public List<GameObject> glassware;
     public GameObject step_1_object;
-    [SerializeField]
-    private GameObject greetings_obj;
-    [SerializeField]
-    private GameObject step1_obj_lec;
-    [SerializeField]
-    private AnimatorPass anim_pass;
+    public AnimatorPass anim_pass;
 
     private void Awake()
     {
@@ -28,9 +24,8 @@ public class VersionManager : MonoBehaviour
 
         GameObject free_object = GetChildWithName(welcome_object, "FreeButton");
         Button free_button = free_object.GetComponent<Button>();
-
+    
         free_button.onClick.AddListener(OnFreePressed);
-
     }
 
     private void OnDestroy()
@@ -55,11 +50,10 @@ public class VersionManager : MonoBehaviour
         ChangeGlasswareVisibility(true);
 
         welcome_object.SetActive(false);
-        anim_pass.avatar_anim.SetTrigger("Greet");
-        greetings_obj.SetActive(true);
-        StartCoroutine(StepOne());
+        step_1_object.SetActive(true);
         guided = true;
         change_version.action.started += OnPrimaryPress;
+        anim_pass.avatar_anim.SetTrigger("Greet");
     }
 
     void OnFreePressed()
@@ -69,6 +63,7 @@ public class VersionManager : MonoBehaviour
         welcome_object.SetActive(false);
         guided = false;
         change_version.action.started += OnPrimaryPress;
+        anim_pass.avatar_anim.SetTrigger("Greet");
     }
 
     void ChangeGlasswareVisibility(bool visible) 
@@ -82,13 +77,6 @@ public class VersionManager : MonoBehaviour
     private void OnPrimaryPress(InputAction.CallbackContext context)
     {
         guided = !guided;
-    }
-
-    private IEnumerator StepOne()
-    {
-        yield return new WaitForSeconds(10);
-        step_1_object.SetActive(true);
-        step1_obj_lec.SetActive(true);
     }
 
     GameObject GetChildWithName(GameObject obj, string name)

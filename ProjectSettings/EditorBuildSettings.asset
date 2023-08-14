@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main Menu.unity
-    guid: 4e5ebe7dce644534ba0e8feeef610882
+    path: Assets/Scenes/1 Start Scene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Chemistry Lab.unity
+    guid: afdcb113ffd5a4353ad88f0dd03743af
   - enabled: 1
     path: Assets/Scenes/ChemistryLab-Lecturer.unity
     guid: 166da29740063fa44b3a4a5f78793474

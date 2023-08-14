@@ -24,22 +24,7 @@ public class FunnelFlowControl : MonoBehaviour
     AudioSource hissing_audio;
     AudioSource positive_sound;
     AudioSource negative_sound;
-    [SerializeField]
-    private GameObject step2_obj_lec;
-    [SerializeField]
-    private GameObject step3_obj_lec;
-    [SerializeField]
-    private GameObject step4_obj_lec;
-    [SerializeField]
-    private GameObject step5_obj_lec;
-    [SerializeField]
-    private GameObject step6_obj_lec;
-    [SerializeField]
-    private GameObject step7_obj_lec;
-    [SerializeField]
-    private GameObject pressure_failure;
-    [SerializeField]
-    private GameObject pressure_release;
+    public AnimatorPass anim_pass;
     float pressure_countdown;
     float pressure_release_countdown = 20.0f;
     int num_pressure_releases = 0;
@@ -202,7 +187,7 @@ public class FunnelFlowControl : MonoBehaviour
             // Experiment has failed. Pressure has built up too much
             current_step = CurrentStep.None;
             DisableAllUIExcept("PressureFailure");
-            pressure_failure.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
 
         if (num_pressure_releases > 0 && pressure_countdown <= 0f && pressure_building) 
@@ -216,7 +201,7 @@ public class FunnelFlowControl : MonoBehaviour
                 pressure_trapped = true;
                 pressure_release_countdown = 20.0f;
                 pressure_building = false;
-                pressure_release.SetActive(true);
+
                 Debug.Log("Pressure is trapped");
             }
             catch (System.InvalidCastException)
@@ -260,11 +245,12 @@ public class FunnelFlowControl : MonoBehaviour
         {
           
             current_step = CurrentStep.Fifth;
+
             if (version_manager.guided) 
             {
                 DisableAllUIExcept("Step5");
-                StartCoroutine(StepFive());
             }
+            
             step_4_done = true;
         }
 
@@ -279,7 +265,6 @@ public class FunnelFlowControl : MonoBehaviour
                     if (version_manager.guided) 
                     {
                         DisableAllUIExcept("Step2");
-                        step2_obj_lec.SetActive(true);
                     }
                     break;
                 }
@@ -301,7 +286,6 @@ public class FunnelFlowControl : MonoBehaviour
                 if (version_manager.guided)
                 {
                     DisableAllUIExcept("Step3");
-                    step3_obj_lec.SetActive(true);
                 }
             }
         }
@@ -336,7 +320,7 @@ public class FunnelFlowControl : MonoBehaviour
         {
             current_step = CurrentStep.None;
             DisableAllUIExcept("PressureFailure");
-            pressure_failure.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
         // If all pressure released when the user places the funnel back on the clamp then move onto step 6 (to remove the stopper)
         if (stopper_added_correctly && num_pressure_releases == 0 && !funnel_clamped_correctly) 
@@ -347,8 +331,8 @@ public class FunnelFlowControl : MonoBehaviour
             if (version_manager.guided) 
             {
                 DisableAllUIExcept("Step6");
-                //step6_obj_lec.SetActive(true);
             }
+            
             funnel_clamped_correctly = true;
         }
     }
@@ -428,14 +412,15 @@ public class FunnelFlowControl : MonoBehaviour
             if (version_manager.guided)
             {
                 DisableAllUIExcept("Step4");
-                step4_obj_lec.SetActive(true);
             }
+
             stopper_added_correctly = true;
         }
         else
         {
             current_step = CurrentStep.None;
             DisableAllUIExcept("EarlyStepFailure");
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
 
     }
@@ -468,18 +453,19 @@ public class FunnelFlowControl : MonoBehaviour
 
             
             DisableAllUIExcept("Step7");
-            //step7_obj_lec.SetActive(true);
+            
         }
         else if (num_pressure_releases > 0) 
         {
             current_step = CurrentStep.None;
             DisableAllUIExcept("PressureFailure");
-            pressure_failure.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
         else if (!funnel_clamped_correctly || !stopper_added_correctly)
         {
             current_step = CurrentStep.None;
             DisableAllUIExcept("EarlyStepFailure");
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
     }
 
@@ -492,12 +478,7 @@ public class FunnelFlowControl : MonoBehaviour
     {
         negative_sound.Play();
     }
-    
-    private IEnumerator StepFive()
-    {
-       yield return new WaitForSeconds(5);
-       step5_obj_lec.SetActive(true);
-    }
+
     public void OnValveSelected(SelectEnterEventArgs args)
     {
         // Open/Close the valve
@@ -611,20 +592,24 @@ public class FunnelFlowControl : MonoBehaviour
         if (!all_shaken)
         {
             shake_failure.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
         // If too much bottom layer left in funnel then fail user
         else if (funnel_fill >= 0.01) 
         {
             funnel_layer_failure.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
         // If too much upper layer in flask then fail user
         else if (flask_upper_fill >= 0.01)
         {
             flask_layer_failure.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Failure");
         }
         else
         {
             success.SetActive(true);
+            anim_pass.avatar_anim.SetTrigger("Success");
         }
     }
     // Called when the teaching version changes
