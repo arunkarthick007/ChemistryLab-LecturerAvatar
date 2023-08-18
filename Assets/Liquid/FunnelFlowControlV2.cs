@@ -40,7 +40,10 @@ public class FunnelFlowControlV2 : MonoBehaviour
     [SerializeField]
     private GameObject pressure_failure;
     [SerializeField]
+    private GameObject early_stepfailure;
+    [SerializeField]
     private AnimatorPassing anim_pass;
+    [SerializeField]
     private GameObject pressure_release;
     float pressure_countdown;
     float pressure_release_countdown = 20.0f;
@@ -329,6 +332,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
             if (stopper_added_correctly && num_pressure_releases > 0 && stopperSocket && !pressure_trapped && !IsValveOpen()) 
             {
                 pressure_building = true;
+                pressure_release.SetActive(false);
             }
             return;
         }
@@ -438,6 +442,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
         {
             current_step = CurrentStep.None;
             DisableAllUIExcept("EarlyStepFailure");
+            early_stepfailure.SetActive(true);
         }
 
     }
@@ -482,6 +487,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
         {
             current_step = CurrentStep.None;
             DisableAllUIExcept("EarlyStepFailure");
+            early_stepfailure.SetActive(true);
         }
     }
 
@@ -536,6 +542,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
                 pressure_countdown = Random.Range(countdown_lower, countdown_upper);
 
                 pressure_building = true;
+                pressure_release.SetActive(false);
                 Debug.Log("Pressure building again");
             }
         }
