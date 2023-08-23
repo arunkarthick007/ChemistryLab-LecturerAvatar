@@ -26,6 +26,8 @@ public class FunnelFlowControlV2 : MonoBehaviour
     AudioSource negative_sound;
     AudioSource sounds;
     [SerializeField]
+    private GameObject step1_obj_lec;
+    [SerializeField]
     private GameObject step2_obj_lec;
     [SerializeField]
     private GameObject step3_obj_lec;
@@ -41,6 +43,14 @@ public class FunnelFlowControlV2 : MonoBehaviour
     private GameObject pressure_failure;
     [SerializeField]
     private GameObject early_stepfailure;
+    [SerializeField]
+    private GameObject failure_shake;
+    [SerializeField]
+    private GameObject bottomlayer_failure;
+    [SerializeField]
+    private GameObject upperlayer_failure;
+    [SerializeField]
+    private GameObject exp_success;
     [SerializeField]
     private AnimatorPassing anim_pass;
     [SerializeField]
@@ -221,6 +231,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
                 pressure_trapped = true;
                 pressure_release_countdown = 20.0f;
                 pressure_building = false;
+                step4_obj_lec.SetActive(false);
                 pressure_release.SetActive(true);
                 Debug.Log("Pressure is trapped");
             }
@@ -268,6 +279,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
             if (version_manager.guided) 
             {
                 DisableAllUIExcept("Step5");
+                step4_obj_lec.SetActive(false);
                 step5_obj_lec.SetActive(true);
             }
             step_4_done = true;
@@ -284,6 +296,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
                     if (version_manager.guided) 
                     {
                         DisableAllUIExcept("Step2");
+                        step1_obj_lec.SetActive(false);
                         step2_obj_lec.SetActive(true);
                     }
                     break;
@@ -306,6 +319,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
                 if (version_manager.guided)
                 {
                     DisableAllUIExcept("Step3");
+                    step2_obj_lec.SetActive(false);
                     step3_obj_lec.SetActive(true);
                 }
             }
@@ -353,6 +367,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
             if (version_manager.guided) 
             {
                 DisableAllUIExcept("Step6");
+                step5_obj_lec.SetActive(false);
                 step6_obj_lec.SetActive(true);
             }
             funnel_clamped_correctly = true;
@@ -434,6 +449,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
             if (version_manager.guided)
             {
                 DisableAllUIExcept("Step4");
+                step3_obj_lec.SetActive(false);
                 step4_obj_lec.SetActive(true);
             }
             stopper_added_correctly = true;
@@ -475,6 +491,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
 
             
             DisableAllUIExcept("Step7");
+            step6_obj_lec.SetActive(false);
             step7_obj_lec.SetActive(true);
         }
         else if (num_pressure_releases > 0) 
@@ -501,11 +518,6 @@ public class FunnelFlowControlV2 : MonoBehaviour
         negative_sound.Play();
     }
     
-    // private IEnumerator StepFive()
-    // {
-    //    yield return new WaitForSeconds(5);
-    //    step5_obj_lec.SetActive(true);
-    // }
     public void OnValveSelected(SelectEnterEventArgs args)
     {
         // Open/Close the valve
@@ -620,23 +632,27 @@ public class FunnelFlowControlV2 : MonoBehaviour
         if (!all_shaken)
         {
             shake_failure.SetActive(true);
+            failure_shake.SetActive(true);
             anim_pass.avatar_anim.SetTrigger("Failure");
         }
         // If too much bottom layer left in funnel then fail user
         else if (funnel_fill >= 0.01) 
         {
             funnel_layer_failure.SetActive(true);
+            bottomlayer_failure.SetActive(true);
             anim_pass.avatar_anim.SetTrigger("Failure");
         }
         // If too much upper layer in flask then fail user
         else if (flask_upper_fill >= 0.01)
         {
             flask_layer_failure.SetActive(true);
+            upperlayer_failure.SetActive(true);
             anim_pass.avatar_anim.SetTrigger("Failure");
         }
         else
         {
             success.SetActive(true);
+            exp_success.SetActive(true);
             anim_pass.avatar_anim.SetTrigger("Success");
         }
     }

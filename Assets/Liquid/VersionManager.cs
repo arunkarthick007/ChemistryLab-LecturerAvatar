@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
- 
+using UnityEngine.SceneManagement; 
 
 public class VersionManager : MonoBehaviour
 {
@@ -26,6 +26,11 @@ public class VersionManager : MonoBehaviour
         Button free_button = free_object.GetComponent<Button>();
     
         free_button.onClick.AddListener(OnFreePressed);
+
+        GameObject menu_object = GetChildWithName(welcome_object, "MainMenu");
+        Button menu_button = menu_object.GetComponent<Button>();
+
+        menu_button.onClick.AddListener(OnMenuPressed);
     }
 
     private void OnDestroy()
@@ -64,6 +69,11 @@ public class VersionManager : MonoBehaviour
         guided = false;
         change_version.action.started += OnPrimaryPress;
         anim_pass.avatar_anim.SetTrigger("Greet");
+    }
+
+     void OnMenuPressed()
+    {
+        SceneManager.LoadScene(sceneBuildIndex: 0);
     }
 
     void ChangeGlasswareVisibility(bool visible) 

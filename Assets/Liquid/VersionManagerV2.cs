@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class VersionManagerV2 : MonoBehaviour
 {
@@ -31,6 +32,11 @@ public class VersionManagerV2 : MonoBehaviour
 
         free_button.onClick.AddListener(OnFreePressed);
 
+        GameObject menu_object = GetChildWithName(welcome_object, "MainMenu");
+        Button menu_button = menu_object.GetComponent<Button>();
+
+        menu_button.onClick.AddListener(OnMenuPressed);
+
     }
 
     private void OnDestroy()
@@ -42,6 +48,7 @@ public class VersionManagerV2 : MonoBehaviour
     void Start()
     {
         ChangeGlasswareVisibility(false);
+        StartCoroutine(Greetings());
     }
 
     // Update is called once per frame
@@ -53,11 +60,11 @@ public class VersionManagerV2 : MonoBehaviour
     void OnGuidedPressed() 
     {
         ChangeGlasswareVisibility(true);
-
+        greetings_obj.SetActive(false);
         welcome_object.SetActive(false);
-        anim_pass.avatar_anim.SetTrigger("Greet");
-        greetings_obj.SetActive(true);
-        StartCoroutine(StepOne());
+        step_1_object.SetActive(true);
+        step1_obj_lec.SetActive(true);
+        anim_pass.avatar_anim.SetTrigger("Step1");
         guided = true;
         change_version.action.started += OnPrimaryPress;
     }
@@ -69,6 +76,11 @@ public class VersionManagerV2 : MonoBehaviour
         welcome_object.SetActive(false);
         guided = false;
         change_version.action.started += OnPrimaryPress;
+    }
+    
+    void OnMenuPressed()
+    {
+        SceneManager.LoadScene(sceneBuildIndex: 0);
     }
 
     void ChangeGlasswareVisibility(bool visible) 
@@ -84,12 +96,11 @@ public class VersionManagerV2 : MonoBehaviour
         guided = !guided;
     }
 
-    private IEnumerator StepOne()
+     private IEnumerator Greetings()
     {
-        yield return new WaitForSeconds(10);
-        step_1_object.SetActive(true);
-        step1_obj_lec.SetActive(true);
-        anim_pass.avatar_anim.SetTrigger("Step1");
+        yield return new WaitForSeconds(1);
+        greetings_obj.SetActive(true);
+        anim_pass.avatar_anim.SetTrigger("Greet");
     }
 
     GameObject GetChildWithName(GameObject obj, string name)
