@@ -17,6 +17,7 @@ public class VersionManagerV2 : MonoBehaviour
     private GameObject greetings_obj;
     [SerializeField]
     private GameObject step1_obj_lec;
+    //Animation Controller object of avatar
     [SerializeField]
     private AnimatorPassing anim_pass;
 
@@ -32,6 +33,7 @@ public class VersionManagerV2 : MonoBehaviour
 
         free_button.onClick.AddListener(OnFreePressed);
 
+        //Extra button to go back to the Main Menu
         GameObject menu_object = GetChildWithName(welcome_object, "MainMenu");
         Button menu_button = menu_object.GetComponent<Button>();
 
@@ -48,6 +50,7 @@ public class VersionManagerV2 : MonoBehaviour
     void Start()
     {
         ChangeGlasswareVisibility(false);
+        //Introduced delay for smooth transition
         StartCoroutine(Greetings());
     }
 
@@ -63,7 +66,9 @@ public class VersionManagerV2 : MonoBehaviour
         greetings_obj.SetActive(false);
         welcome_object.SetActive(false);
         step_1_object.SetActive(true);
+        //Setting the step1 gameobject to initiate the instruction from Avatar
         step1_obj_lec.SetActive(true);
+        //Setting the trigger of animation controller for showing step1 animation
         anim_pass.avatar_anim.SetTrigger("Step1");
         guided = true;
         change_version.action.started += OnPrimaryPress;
@@ -78,6 +83,7 @@ public class VersionManagerV2 : MonoBehaviour
         change_version.action.started += OnPrimaryPress;
     }
     
+    //Function to load the Main Menu scene.
     void OnMenuPressed()
     {
         SceneManager.LoadScene(sceneBuildIndex: 0);
@@ -96,6 +102,7 @@ public class VersionManagerV2 : MonoBehaviour
         guided = !guided;
     }
 
+     //Function to set the greetings object which includes animation and speech.
      private IEnumerator Greetings()
     {
         yield return new WaitForSeconds(1);

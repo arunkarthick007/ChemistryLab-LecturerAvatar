@@ -25,6 +25,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
     AudioSource positive_sound;
     AudioSource negative_sound;
     AudioSource sounds;
+    //Game objects to initialise avatar instructions and feedback.
     [SerializeField]
     private GameObject step1_obj_lec;
     [SerializeField]
@@ -232,6 +233,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
                 pressure_release_countdown = 20.0f;
                 pressure_building = false;
                 step4_obj_lec.SetActive(false);
+                //Avatar instructs the user to release the pressure
                 pressure_release.SetActive(true);
                 Debug.Log("Pressure is trapped");
             }
@@ -346,6 +348,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
             if (stopper_added_correctly && num_pressure_releases > 0 && stopperSocket && !pressure_trapped && !IsValveOpen()) 
             {
                 pressure_building = true;
+                //Setting this to false to iterate the instruction when pressure builds up again.
                 pressure_release.SetActive(false);
             }
             return;
@@ -629,6 +632,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
             last_step.SetActive(false);
         }
         // If not shaken enough then fail the user for this
+        //Setting Avatar's failure animation
         if (!all_shaken)
         {
             shake_failure.SetActive(true);
@@ -651,6 +655,7 @@ public class FunnelFlowControlV2 : MonoBehaviour
         }
         else
         {
+            //Setting avatar's success animation
             success.SetActive(true);
             exp_success.SetActive(true);
             anim_pass.avatar_anim.SetTrigger("Success");
